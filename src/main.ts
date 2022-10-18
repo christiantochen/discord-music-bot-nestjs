@@ -1,11 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { resolveDynamicProviders } from 'nestjs-dynamic-providers';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder, OpenAPIObject } from '@nestjs/swagger';
 import { VersioningType, VERSION_NEUTRAL } from '@nestjs/common';
 
 async function bootstrap() {
-  await resolveDynamicProviders();
   const app = await NestFactory.create(AppModule);
 
   app.enableVersioning({

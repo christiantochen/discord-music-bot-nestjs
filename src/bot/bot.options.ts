@@ -21,6 +21,13 @@ export class BotOptions implements DiscordOptionsFactory {
           GatewayIntentBits.GuildVoiceStates,
         ],
       },
+      failOnLogin: true,
+      registerCommandOptions: [
+        {
+          forGuild: this.configService.get('discord.client_id'),
+          removeCommandsBefore: true,
+        },
+      ],
     };
   }
 }

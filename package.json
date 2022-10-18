@@ -21,14 +21,17 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@discord-nestjs/common": "^4.0.8",
     "@discord-nestjs/core": "^4.3.1",
+    "@discordjs/opus": "^0.8.0",
+    "@discordjs/voice": "^0.13.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.1.2",
     "discord.js": "^14.6.0",
-    "nestjs-dynamic-providers": "^0.1.7",
+    "libsodium-wrappers": "^0.7.10",
     "play-dl": "^1.9.5",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
@@ -55,7 +58,8 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.1.0",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "webpack": "5.0.0"
   },
   "jest": {
     "moduleFileExtensions": [

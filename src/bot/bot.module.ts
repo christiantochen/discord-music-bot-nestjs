@@ -2,6 +2,7 @@ import { DiscordModule } from '@discord-nestjs/core';
 import { Module } from '@nestjs/common';
 import { BotGateway } from './bot.gateway';
 import { BotOptions } from './bot.options';
+import { MusicPlayerGateway } from './musicPlayers';
 import * as providers from './providers';
 import { BotSlashCommandModule } from './slashCommands';
 
@@ -12,6 +13,6 @@ import { BotSlashCommandModule } from './slashCommands';
     }),
     BotSlashCommandModule,
   ],
-  providers: [BotGateway, ...Object.values(providers)],
+  providers: [BotGateway, MusicPlayerGateway, ...Object.values(providers)],
 })
 export class BotModule {}
