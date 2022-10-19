@@ -1,1 +1,1 @@
-export * from './bot-slash-commands.module';
+export * from './slash-commands.module';

@@ -22,7 +22,7 @@ export class JoinCommand implements DiscordCommand {
     const voiceChannel = member.voice.channel as VoiceChannel;
     const message = EmbedService.create();
 
-    if (!player.voiceChannelId) {
+    if (!player.IsConnectedToVoiceChannel()) {
       await player.connect(voiceChannel, memberChannel);
       message.setDescription('Ohhh, how exciting! Ahem.');
     } else {

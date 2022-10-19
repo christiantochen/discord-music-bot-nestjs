@@ -8,17 +8,23 @@ import {
 import { MusicPlayerService } from 'src/bot/musicPlayers';
 
 @Command({
-  name: 'leave',
-  description: 'Bot will leave voice channel.',
+  name: 'next',
+  description: 'Skip and play next song from playlist.',
 })
-export class LeaveCommand implements DiscordCommand {
+export class NextCommand implements DiscordCommand {
   @UseGuards(MemberInVoiceChannelGuard, MemberInSameVoiceChannelGuard)
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
-    const message = EmbedService.create({ description: 'Time to clean up.' });
 
-    await player.disconnect();
+    if (await player.next()) {
+      const track = player.getCurrentTrack();
 
-    interaction.reply({ embeds: [message] });
+      interaction.reply({ embeds: [EmbedService.createNowPlaying(track)] });
+      return;
+    }
+
+    interaction.reply({
+      embeds: [EmbedService.create({ description: 'This is the last track' })],
+    });
   }
 }

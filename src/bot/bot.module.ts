@@ -4,14 +4,14 @@ import { BotGateway } from './bot.gateway';
 import { BotOptions } from './bot.options';
 import { MusicPlayerGateway } from './musicPlayers';
 import * as providers from './providers';
-import { BotSlashCommandModule } from './slashCommands';
+import { SlashCommandModule } from './slashCommands';
 
 @Module({
   imports: [
     DiscordModule.forRootAsync({
       useClass: BotOptions,
     }),
-    BotSlashCommandModule,
+    SlashCommandModule,
   ],
   providers: [BotGateway, MusicPlayerGateway, ...Object.values(providers)],
 })

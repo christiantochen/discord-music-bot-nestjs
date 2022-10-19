@@ -8,17 +8,18 @@ import {
 import { MusicPlayerService } from 'src/bot/musicPlayers';
 
 @Command({
-  name: 'leave',
-  description: 'Bot will leave voice channel.',
+  name: 'stop',
+  description: 'Stop the music player.',
 })
-export class LeaveCommand implements DiscordCommand {
+export class StopCommand implements DiscordCommand {
   @UseGuards(MemberInVoiceChannelGuard, MemberInSameVoiceChannelGuard)
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
-    const message = EmbedService.create({ description: 'Time to clean up.' });
 
-    await player.disconnect();
+    await player.stop();
 
-    interaction.reply({ embeds: [message] });
+    interaction.reply({
+      embeds: [EmbedService.create({ description: 'Music stop' })],
+    });
   }
 }

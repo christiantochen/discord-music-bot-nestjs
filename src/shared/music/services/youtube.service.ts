@@ -1,10 +1,18 @@
-import { YouTubeVideo, validate, video_basic_info, search } from 'play-dl';
+import { AudioResource, createAudioResource } from '@discordjs/voice';
+import {
+  YouTubeVideo,
+  validate,
+  video_basic_info,
+  search,
+  stream,
+} from 'play-dl';
 
 export class YoutubeService {
-  private searchVideoYT(query: string): Promise<YouTubeVideo[]> {
+  private searchVideoYT(query: string, limit = 1): Promise<YouTubeVideo[]> {
     return search(query, {
       source: { youtube: 'video' },
-      limit: 1,
+      limit,
+      fuzzy: true,
     });
   }
 
@@ -13,7 +21,7 @@ export class YoutubeService {
 
     if (validateResult !== 'search') return [];
 
-    return this.searchVideoYT(query);
+    return this.searchVideoYT(query, 5);
   }
 
   async findOne(query: string): Promise<YouTubeVideo | undefined> {
@@ -40,4 +48,15 @@ export class YoutubeService {
 
     return video;
   }
+
+  createAudio = async (
+    metadata: YouTubeVideo | any,
+  ): Promise<AudioResource<any>> => {
+    const audioStream = await stream(metadata.url, { quality: 0 });
+
+    return createAudioResource(audioStream.stream, {
+      inputType: audioStream.type,
+      metadata,
+    });
+  };
 }
