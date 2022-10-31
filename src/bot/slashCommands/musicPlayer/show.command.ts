@@ -6,7 +6,6 @@ import {
   MemberInVoiceChannelGuard,
 } from 'src/bot/guards';
 import { MusicPlayerService } from 'src/bot/musicPlayers';
-import { AudioPlayerStatus } from '@discordjs/voice';
 
 @Command({
   name: 'show',
@@ -17,25 +16,11 @@ export class ShowCommand implements DiscordCommand {
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
 
-    const playlist = player.getTracks().reduce((prev: string, track, index) => {
-      let title = `[${track.title}](${track.url}) by [${track.channel.name}](${track.channel.url}) [${track.durationRaw}]`;
-
-      if (
-        index === player.trackAt - 1 &&
-        player.state.status === AudioPlayerStatus.Playing
-      )
-        title = `*${title}*`;
-
-      title = `**${index + 1}.**\t${title}`;
-
-      if (prev) title = `${prev}\n${title}`;
-
-      return title;
-    }, undefined);
-
-    const message = EmbedService.create({
-      description: playlist || 'No List',
-    });
+    const message = EmbedService.showTracks(
+      player.getTracks(),
+      player.trackAt,
+      1,
+    );
 
     interaction.reply({ embeds: [message] });
   }

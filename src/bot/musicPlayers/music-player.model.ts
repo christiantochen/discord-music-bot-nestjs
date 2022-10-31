@@ -7,7 +7,7 @@ import {
   VoiceConnection,
 } from '@discordjs/voice';
 import { Guild, TextChannel, VoiceChannel } from 'discord.js';
-import { stream, YouTubeVideo } from 'play-dl';
+import { stream, YouTubeStream, YouTubeVideo } from 'play-dl';
 import { EmbedService } from '../providers';
 
 export type LoopMode = 'off' | 'current' | 'all';
@@ -19,6 +19,7 @@ export class MusicPlayer extends AudioPlayer {
   private timeout: NodeJS.Timeout | undefined;
   private stopCalled = false;
   private tracks: YouTubeVideo[] = [];
+  private stream: YouTubeStream;
 
   public trackAt = 1;
   public autoPlay = false;
@@ -142,7 +143,6 @@ export class MusicPlayer extends AudioPlayer {
       inputType: audioStream.type,
       metadata,
     });
-
     super.play(audioResource);
     return true;
   }

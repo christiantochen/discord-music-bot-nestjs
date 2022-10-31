@@ -19,10 +19,12 @@ export class MusicPlayerGateway {
     newState: VoiceState,
   ): Promise<void> {
     if (!newState.member.voice.channel) {
-      this.logger.log('someone disconnected');
+      this.logger.log(`${newState.member.displayName} disconnected`);
 
       if (newState.member.user.id === this.client.user.id) {
-        this.logger.log('bot removed from voice channel');
+        this.logger.log(
+          `${newState.member.displayName} removed from voice channel`,
+        );
         MusicPlayerService.Delete(newState.member.guild);
         return;
       }
@@ -31,7 +33,7 @@ export class MusicPlayerGateway {
         oldState.channel.members.size === 1 &&
         oldState.channel.members.first().user.id === this.client.user.id
       ) {
-        this.logger.log('last member is bot, set timeout');
+        this.logger.log('set timeout');
         MusicPlayerService.Get(oldState.member.guild)?.setTimeout();
         return;
       }
@@ -39,7 +41,7 @@ export class MusicPlayerGateway {
       return;
     }
 
-    this.logger.log('someone connected');
+    this.logger.log(`${newState.member.displayName} connected`);
     const player = MusicPlayerService.Get(newState.member.guild);
 
     if (
