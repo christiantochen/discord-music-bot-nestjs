@@ -18,9 +18,11 @@ export class MusicPlayerGateway {
     oldState: VoiceState,
     newState: VoiceState,
   ): Promise<void> {
+    // if a member disconnected from voice channel
     if (!newState.member.voice.channel) {
       this.logger.log(`${newState.member.displayName} disconnected`);
 
+      // if the member is bot
       if (newState.member.user.id === this.client.user.id) {
         this.logger.log(
           `${newState.member.displayName} removed from voice channel`,
@@ -29,6 +31,7 @@ export class MusicPlayerGateway {
         return;
       }
 
+      // if only 1 member left and it is bot
       if (
         oldState.channel.members.size === 1 &&
         oldState.channel.members.first().user.id === this.client.user.id
@@ -42,13 +45,17 @@ export class MusicPlayerGateway {
     }
 
     this.logger.log(`${newState.member.displayName} connected`);
-    const player = MusicPlayerService.Get(newState.member.guild);
+    if (newState.channel.members.size <= 1) return;
 
+    // if total members more than 1
+    // and player is playing music
+    // and player has timeout
+    // then clear the timeout
+    const player = MusicPlayerService.Get(newState.member.guild);
     if (
-      newState.channel.members.size > 1 &&
       player &&
-      player.hasTimeout() &&
-      player.state.status === AudioPlayerStatus.Playing
+      player.state.status === AudioPlayerStatus.Playing &&
+      player.hasTimeout()
     ) {
       this.logger.log('clear timeout');
       player?.clearTimeout();

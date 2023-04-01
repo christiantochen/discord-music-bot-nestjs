@@ -7,7 +7,7 @@ import {
 } from 'discord.js';
 import { EmbedService } from '../../providers';
 import { MemberInVoiceChannelGuard } from 'src/bot/guards';
-import { MusicPlayerService } from 'src/bot/musicPlayers';
+import { MusicPlayerService } from 'src/bot/musicPlayer';
 
 @Command({
   name: 'join',
@@ -18,12 +18,13 @@ export class JoinCommand implements DiscordCommand {
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
     const member = interaction.member as GuildMember;
-    const memberChannel = interaction.channel as TextChannel;
-    const voiceChannel = member.voice.channel as VoiceChannel;
     const message = EmbedService.create();
 
     if (!player.IsConnectedToVoiceChannel()) {
-      await player.connect(voiceChannel, memberChannel);
+      await player.connect(
+        member.voice.channel as VoiceChannel,
+        interaction.channel as TextChannel,
+      );
       message.setDescription('Ohhh, how exciting! Ahem.');
     } else {
       message.setDescription(

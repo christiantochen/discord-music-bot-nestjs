@@ -5,26 +5,20 @@ import {
   MemberInSameVoiceChannelGuard,
   MemberInVoiceChannelGuard,
 } from 'src/bot/guards';
-import { MusicPlayerService } from 'src/bot/musicPlayers';
+import { MusicPlayerService } from 'src/bot/musicPlayer';
 
 @Command({
-  name: 'prev',
-  description: 'Skip and play previous song from playlist.',
+  name: 'leave',
+  description: 'Bot will leave voice channel.',
 })
-export class PrevCommand implements DiscordCommand {
+export class LeaveCommand implements DiscordCommand {
   @UseGuards(MemberInVoiceChannelGuard, MemberInSameVoiceChannelGuard)
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
+    const message = EmbedService.create({ description: 'Time to clean up.' });
 
-    if (await player.previous()) {
-      const track = player.getCurrentTrack();
+    await player.disconnect();
 
-      interaction.reply({ embeds: [EmbedService.createNowPlaying(track)] });
-      return;
-    }
-
-    interaction.reply({
-      embeds: [EmbedService.create({ description: 'This is the first track' })],
-    });
+    interaction.reply({ embeds: [message] });
   }
 }

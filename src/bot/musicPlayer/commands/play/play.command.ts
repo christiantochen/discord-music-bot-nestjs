@@ -12,15 +12,15 @@ import {
   ActionRowBuilder,
   GuildMember,
   InteractionReplyOptions,
-  SelectMenuBuilder,
+  StringSelectMenuBuilder,
   SelectMenuComponentOptionData,
   TextChannel,
   VoiceChannel,
 } from 'discord.js';
-import { MusicPlayerService } from 'src/bot/musicPlayers';
+import { MusicPlayerService } from 'src/bot/musicPlayer';
 import { YoutubeService } from 'src/shared/music/services';
-import { MusicPlayerInteractionCollector } from '../music-player.collector';
 import { PlayDto } from './play.dto';
+import { MusicPlayerInteractionCollector } from '../../music-player.collector';
 
 @Command({
   name: 'play',
@@ -54,12 +54,13 @@ export class PlayCommand implements DiscordTransformedCommand<PlayDto> {
       value: track.id,
     }));
 
-    const selector = new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-      new SelectMenuBuilder()
-        .setCustomId('selectSong')
-        .setPlaceholder(`Select a song`)
-        .addOptions(options),
-    );
+    const selector =
+      new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+        new StringSelectMenuBuilder()
+          .setCustomId('selectSong')
+          .setPlaceholder(`Select a song`)
+          .addOptions(options),
+      );
 
     return {
       components: [selector],

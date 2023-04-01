@@ -1,21 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common';
-import {
-  Once,
-  InjectDiscordClient,
-  PrefixCommand,
-  UsePipes,
-} from '@discord-nestjs/core';
+import { Once, InjectDiscordClient } from '@discord-nestjs/core';
 import {
   ActionRowBuilder,
   ActivityType,
   Client,
   PresenceUpdateStatus,
-  SelectMenuBuilder,
   SelectMenuComponentOptionData,
+  StringSelectMenuBuilder,
   TextChannel,
+  VoiceChannel,
 } from 'discord.js';
-import { PrefixCommandTransformPipe } from '@discord-nestjs/common';
 import { EmbedService } from './providers';
+
+const LOOP_SEQUENCES = ['🔁', '🔂', '🔀'];
 
 @Injectable()
 export class BotGateway {
@@ -45,10 +42,21 @@ export class BotGateway {
   async Test() {
     console.log('masuk sini ga bro');
 
-    this.client.guilds.cache.forEach((guild) => {
+    this.client.guilds.cache.forEach(async (guild) => {
       const channel = guild.channels.cache
         .filter((channel) => channel instanceof TextChannel)
         .first();
+
+      const voiceChannels = guild.channels.cache.filter(
+        (channel) => channel instanceof VoiceChannel,
+      );
+
+      console.log(
+        voiceChannels.map((vc) => ({
+          name: vc.name,
+          id: vc.id,
+        })),
+      );
 
       if (channel instanceof TextChannel) {
         const options: SelectMenuComponentOptionData[] = Array.from(
@@ -72,14 +80,24 @@ export class BotGateway {
         const message = EmbedService.create({ description: tracklist });
 
         const selector =
-          new ActionRowBuilder<SelectMenuBuilder>().addComponents(
-            new SelectMenuBuilder()
+          new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
+            new StringSelectMenuBuilder()
               .setCustomId('select')
               .setPlaceholder(`Select a song`)
               .addOptions(options),
           );
 
-        channel.send({ embeds: [message], components: [selector] });
+        const channelMessage = await channel.send({
+          embeds: [message],
+          components: [selector],
+        });
+
+        channelMessage.react('⏮️');
+        channelMessage.react('▶️');
+        channelMessage.react('⏹️');
+        channelMessage.react('⏭️');
+        channelMessage.react('🔁');
+        channelMessage.react('🔀');
       }
     });
   }

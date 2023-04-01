@@ -11,18 +11,18 @@ async function bootstrap() {
     defaultVersion: VERSION_NEUTRAL,
   });
 
-  registerSwagger(app);
+  useSwagger(app);
 
   await app.listen(3000);
 }
 
-async function registerSwagger(app): Promise<void> {
+async function useSwagger(app): Promise<void> {
   const version = process.env.npm_package_version;
 
   const config = new DocumentBuilder()
     .addBasicAuth()
-    .setTitle('Upload Service')
-    .setDescription('Upload Service')
+    .setTitle('Discord Music Bot')
+    .setDescription('Discord Music Bot')
     .setVersion(version)
     .addSecurity('basic', { type: 'http', scheme: 'basic' })
     .addSecurityRequirements('basic')

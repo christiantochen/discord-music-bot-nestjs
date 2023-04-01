@@ -1,6 +1,6 @@
 export const config = {
   discord: {
-    client_id: process.env.CLIENT_ID,
+    client_id: process.env.DISCORD_CLIENT_ID,
     bot: { token: process.env.DISCORD_BOT_TOKEN },
   },
 };

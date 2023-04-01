@@ -5,23 +5,21 @@ import {
   MemberInSameVoiceChannelGuard,
   MemberInVoiceChannelGuard,
 } from 'src/bot/guards';
-import { MusicPlayerService } from 'src/bot/musicPlayers';
+import { MusicPlayerService } from 'src/bot/musicPlayer';
 
 @Command({
-  name: 'show',
-  description: 'Display the queue of the current tracks.',
+  name: 'stop',
+  description: 'Stop the music player.',
 })
-export class ShowCommand implements DiscordCommand {
+export class StopCommand implements DiscordCommand {
   @UseGuards(MemberInVoiceChannelGuard, MemberInSameVoiceChannelGuard)
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
 
-    const message = EmbedService.showTracks(
-      player.getTracks(),
-      player.trackAt,
-      1,
-    );
+    await player.stop();
 
-    interaction.reply({ embeds: [message] });
+    interaction.reply({
+      embeds: [EmbedService.create({ description: 'Music stop' })],
+    });
   }
 }
