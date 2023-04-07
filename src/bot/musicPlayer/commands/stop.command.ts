@@ -1,6 +1,6 @@
 import { Command, DiscordCommand, UseGuards } from '@discord-nestjs/core';
 import { CommandInteraction } from 'discord.js';
-import { EmbedService } from '../../providers';
+import { EmbedHelper } from '../../helpers';
 import {
   MemberInSameVoiceChannelGuard,
   MemberInVoiceChannelGuard,
@@ -19,7 +19,7 @@ export class StopCommand implements DiscordCommand {
     await player.stop();
 
     interaction.reply({
-      embeds: [EmbedService.create({ description: 'Music stop' })],
+      embeds: [EmbedHelper.create({ description: 'Music stop' })],
     });
   }
 }

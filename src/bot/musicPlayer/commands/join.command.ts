@@ -5,7 +5,7 @@ import {
   TextChannel,
   VoiceChannel,
 } from 'discord.js';
-import { EmbedService } from '../../providers';
+import { EmbedHelper } from '../../helpers';
 import { MemberInVoiceChannelGuard } from 'src/bot/guards';
 import { MusicPlayerService } from 'src/bot/musicPlayer';
 
@@ -18,7 +18,7 @@ export class JoinCommand implements DiscordCommand {
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
     const member = interaction.member as GuildMember;
-    const message = EmbedService.create();
+    const message = EmbedHelper.create();
 
     if (!player.IsConnectedToVoiceChannel()) {
       await player.connect(

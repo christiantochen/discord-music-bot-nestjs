@@ -1,6 +1,6 @@
 import { Command, DiscordCommand, UseGuards } from '@discord-nestjs/core';
 import { CommandInteraction } from 'discord.js';
-import { EmbedService } from '../../providers';
+import { EmbedHelper } from '../../helpers';
 import {
   MemberInSameVoiceChannelGuard,
   MemberInVoiceChannelGuard,
@@ -15,7 +15,7 @@ export class LeaveCommand implements DiscordCommand {
   @UseGuards(MemberInVoiceChannelGuard, MemberInSameVoiceChannelGuard)
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
-    const message = EmbedService.create({ description: 'Time to clean up.' });
+    const message = EmbedHelper.create({ description: 'Time to clean up.' });
 
     await player.disconnect();
 

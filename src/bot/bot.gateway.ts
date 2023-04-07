@@ -4,13 +4,15 @@ import {
   ActionRowBuilder,
   ActivityType,
   Client,
+  Guild,
   PresenceUpdateStatus,
   SelectMenuComponentOptionData,
   StringSelectMenuBuilder,
   TextChannel,
   VoiceChannel,
 } from 'discord.js';
-import { EmbedService } from './providers';
+import { EmbedHelper } from './helpers';
+import { DatabaseRepository } from 'src/database';
 
 const LOOP_SEQUENCES = ['🔁', '🔂', '🔀'];
 
@@ -21,6 +23,7 @@ export class BotGateway {
   constructor(
     @InjectDiscordClient()
     private readonly client: Client,
+    private readonly repository: DatabaseRepository,
   ) {}
 
   @Once('ready')
@@ -34,6 +37,25 @@ export class BotGateway {
         },
       ],
     });
+
+    await Promise.all(
+      this.client.guilds.cache.map(async (guild: Guild) =>
+        this.repository.guilds.findOneAndUpdate(
+          { id: guild.id },
+          {
+            name: guild.name,
+            ownerId: guild.ownerId,
+            memberCount: guild.memberCount,
+            preferredLocale: guild.preferredLocale,
+            afkChannelId: guild.afkChannelId,
+            publicUpdatesChannelId: guild.publicUpdatesChannelId,
+            rulesChannelId: guild.rulesChannelId,
+            systemChannelId: guild.systemChannelId,
+          },
+          { upsert: true, new: true },
+        ),
+      ),
+    );
 
     this.logger.log(`Bot ${this.client.user.tag} was started!`);
   }
@@ -77,7 +99,7 @@ export class BotGateway {
           })
           .reduce((prev, current) => `${prev}\n${current}`);
 
-        const message = EmbedService.create({ description: tracklist });
+        const message = EmbedHelper.create({ description: tracklist });
 
         const selector =
           new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(

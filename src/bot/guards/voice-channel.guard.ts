@@ -1,6 +1,6 @@
 import { DiscordGuard } from '@discord-nestjs/core';
 import { CommandInteraction, GuildMember } from 'discord.js';
-import { EmbedService } from '../providers';
+import { EmbedHelper } from '../helpers';
 
 export class MemberInVoiceChannelGuard implements DiscordGuard {
   async canActive(
@@ -14,7 +14,7 @@ export class MemberInVoiceChannelGuard implements DiscordGuard {
     if (interaction.isRepliable()) {
       await interaction.reply({
         embeds: [
-          EmbedService.create({ description: 'Please join a voice channel!' }),
+          EmbedHelper.create({ description: 'Please join a voice channel!' }),
         ],
       });
     }
@@ -44,7 +44,7 @@ export class MemberInSameVoiceChannelGuard implements DiscordGuard {
     if (message) {
       if (interaction.isRepliable()) {
         await interaction.reply({
-          embeds: [EmbedService.create({ description: message })],
+          embeds: [EmbedHelper.create({ description: message })],
         });
       }
 

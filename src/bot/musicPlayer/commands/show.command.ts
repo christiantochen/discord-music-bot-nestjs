@@ -1,6 +1,6 @@
 import { Command, DiscordCommand, UseGuards } from '@discord-nestjs/core';
 import { CommandInteraction } from 'discord.js';
-import { EmbedService } from '../../providers';
+import { EmbedHelper } from '../../helpers';
 import {
   MemberInSameVoiceChannelGuard,
   MemberInVoiceChannelGuard,
@@ -16,7 +16,7 @@ export class ShowCommand implements DiscordCommand {
   async handler(interaction: CommandInteraction): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
 
-    const message = EmbedService.showTracks(player.tracks, player.trackAt, 1);
+    const message = EmbedHelper.showTracks(player.tracks, player.trackAt, 1);
 
     interaction.reply({ embeds: [message] });
   }

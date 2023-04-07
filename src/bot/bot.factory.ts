@@ -7,7 +7,7 @@ import { GatewayIntentBits } from 'discord.js';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class BotOptions implements DiscordOptionsFactory {
+export class BotFactory implements DiscordOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
   createDiscordOptions(): DiscordModuleOption {

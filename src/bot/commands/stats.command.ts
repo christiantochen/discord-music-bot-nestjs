@@ -1,6 +1,6 @@
 import { Command, DiscordCommand } from '@discord-nestjs/core';
 import { CommandInteraction, version as djsVersion } from 'discord.js';
-import { EmbedService } from '../providers';
+import { EmbedHelper } from '../helpers';
 
 import { loadavg, cpus, freemem, totalmem } from 'os';
 
@@ -17,7 +17,7 @@ export class StatsCommand implements DiscordCommand {
     const cpuUsage = (loadavg()[0] / cpus().length).toFixed(2);
     const memUsage = Math.floor(toMB(process.memoryUsage().rss));
     const memUsageTotal = Math.floor(toMB(totalmem() - freemem()));
-    const statsEmbed = EmbedService.create({ title: 'Stats' });
+    const statsEmbed = EmbedHelper.create({ title: 'Stats' });
 
     interaction.reply({
       embeds: [

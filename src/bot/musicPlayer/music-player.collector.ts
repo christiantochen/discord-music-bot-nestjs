@@ -1,7 +1,7 @@
 import { InteractionEventCollector, On, Once } from '@discord-nestjs/core';
 import { ButtonInteraction, SelectMenuInteraction } from 'discord.js';
 import { YoutubeService } from 'src/shared/music/services';
-import { EmbedService } from '../providers';
+import { EmbedHelper } from '../helpers';
 import { MusicPlayerService } from './music-player.service';
 import { MusicPlayerActions } from './music-player.action';
 
@@ -15,7 +15,10 @@ export class MusicPlayerInteractionCollector {
   ): Promise<void> {
     const player = MusicPlayerService.GetOrCreate(interaction.guild);
 
-    if (interaction.isSelectMenu() && interaction.customId === 'selectSong') {
+    if (
+      interaction.isStringSelectMenu() &&
+      interaction.customId === 'selectTrack'
+    ) {
       await interaction.deferUpdate();
       const url = interaction.values[0];
       const track = await this.youtubeService.findOne(url);
@@ -28,11 +31,7 @@ export class MusicPlayerInteractionCollector {
         MusicPlayerActions.Play(player);
       }
 
-      const payload = EmbedService.createPayload(
-        interaction,
-        track,
-        nowPlaying,
-      );
+      const payload = EmbedHelper.createPayload(interaction, track, nowPlaying);
 
       await interaction.editReply(payload);
       return;

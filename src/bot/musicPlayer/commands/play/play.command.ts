@@ -5,6 +5,7 @@ import {
   Payload,
   TransformedCommandExecutionContext,
   UseCollectors,
+  UseGuards,
   UsePipes,
 } from '@discord-nestjs/core';
 import { Logger } from '@nestjs/common';
@@ -21,6 +22,7 @@ import { MusicPlayerService } from 'src/bot/musicPlayer';
 import { YoutubeService } from 'src/shared/music/services';
 import { PlayDto } from './play.dto';
 import { MusicPlayerInteractionCollector } from '../../music-player.collector';
+import { MemberInVoiceChannelGuard } from 'src/bot/guards';
 
 @Command({
   name: 'play',
@@ -34,6 +36,7 @@ export class PlayCommand implements DiscordTransformedCommand<PlayDto> {
 
   constructor(private readonly youtubeService: YoutubeService) {}
 
+  @UseGuards(MemberInVoiceChannelGuard)
   async handler(
     @Payload() dto: PlayDto,
     { interaction }: TransformedCommandExecutionContext,
@@ -44,9 +47,13 @@ export class PlayCommand implements DiscordTransformedCommand<PlayDto> {
     const memberChannel = interaction.channel as TextChannel;
     const voiceChannel = member.voice.channel as VoiceChannel;
 
+    console.log(voiceChannel, memberChannel, interaction, member.voice);
+
     if (!player.IsConnectedToVoiceChannel()) {
       await player.connect(voiceChannel, memberChannel);
     }
+
+    console.log(metadata);
 
     const options: SelectMenuComponentOptionData[] = metadata.map((track) => ({
       label: `${track.title}`,
@@ -57,7 +64,7 @@ export class PlayCommand implements DiscordTransformedCommand<PlayDto> {
     const selector =
       new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
         new StringSelectMenuBuilder()
-          .setCustomId('selectSong')
+          .setCustomId('selectTrack')
           .setPlaceholder(`Select a song`)
           .addOptions(options),
       );

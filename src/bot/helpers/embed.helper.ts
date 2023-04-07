@@ -7,7 +7,7 @@ import {
 } from 'discord.js';
 import { YouTubeVideo } from 'play-dl';
 
-export class EmbedService {
+export class EmbedHelper {
   private static transformTitle(track: YouTubeVideo) {
     return `[${track.title}](${track.url}) by [${track.channel.name}](${track.channel.url}) [${track.durationRaw}]`;
   }
@@ -24,6 +24,7 @@ export class EmbedService {
     const message = nowPlaying
       ? this.createNowPlaying(track)
       : this.createAddedToTrack(track);
+
     const payload = new MessagePayload(interaction, {
       embeds: [message],
       components: [],
@@ -33,7 +34,7 @@ export class EmbedService {
   }
 
   public static createNowPlaying(track: YouTubeVideo) {
-    return EmbedService.create({
+    return EmbedHelper.create({
       fields: [
         {
           name: 'NOW PLAYING',
@@ -44,7 +45,7 @@ export class EmbedService {
   }
 
   public static createAddedToTrack(track: YouTubeVideo) {
-    return EmbedService.create({
+    return EmbedHelper.create({
       fields: [
         {
           name: `New track added`,

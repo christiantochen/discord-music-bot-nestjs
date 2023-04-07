@@ -3,10 +3,10 @@ import { CommandInteraction } from 'discord.js';
 import { EmbedHelper } from '../helpers';
 
 @Command({
-  name: 'help',
-  description: 'Display default information.',
+  name: 'setup',
+  description: '',
 })
-export class HelpCommand implements DiscordCommand {
+export class SetupCommand implements DiscordCommand {
   handler(interaction: CommandInteraction): void {
     const message = EmbedHelper.create({ description: `Not Implemented Yet` });
 

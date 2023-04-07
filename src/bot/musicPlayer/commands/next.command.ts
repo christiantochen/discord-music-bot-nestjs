@@ -1,6 +1,6 @@
 import { Command, DiscordCommand, UseGuards } from '@discord-nestjs/core';
 import { CommandInteraction } from 'discord.js';
-import { EmbedService } from '../../providers';
+import { EmbedHelper } from '../../helpers';
 import {
   MemberInSameVoiceChannelGuard,
   MemberInVoiceChannelGuard,
@@ -19,12 +19,12 @@ export class NextCommand implements DiscordCommand {
     if (await MusicPlayerActions.Next(player)) {
       const track = player.getCurrentTrack();
 
-      interaction.reply({ embeds: [EmbedService.createNowPlaying(track)] });
+      interaction.reply({ embeds: [EmbedHelper.createNowPlaying(track)] });
       return;
     }
 
     interaction.reply({
-      embeds: [EmbedService.create({ description: 'This is the last track' })],
+      embeds: [EmbedHelper.create({ description: 'This is the last track' })],
     });
   }
 }
